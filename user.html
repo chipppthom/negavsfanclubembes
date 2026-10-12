@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cổng Đăng Nhập Thành Viên</title>
+    <style>
+        body { 
+            text-align: center; 
+            font-family: 'Arial', sans-serif; 
+            padding-top: 80px; 
+            margin: 0; 
+            background-color: #FFF8E2;
+        }
+        
+        .single-box { 
+            background: #FFF8E2; 
+            max-width: 400px; 
+            margin: auto; 
+            padding: 40px 30px; 
+            border-radius: 20px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2); 
+        }
+
+        h2 { 
+            color: #5E442E; 
+            margin-top: 0; 
+            font-size: 22px; 
+            margin-bottom: 25px; 
+        }
+        
+        .input-group { 
+            margin: 15px 0; 
+            text-align: left; 
+            color: #5E442E; 
+        }
+        
+        .input-group label { 
+            display: block; 
+            font-weight: bold; 
+            margin-bottom: 6px; 
+            color: #5E442E; 
+            font-size: 14px; 
+        }
+        
+        .input-group input { 
+            width: 100%; 
+            padding: 12px; 
+            font-size: 15px; 
+            border: 2px solid #5E442E; 
+            border-radius: 8px; 
+            box-sizing: border-box; 
+            background-color: #FFF8E2; 
+            color: #5E442E; 
+        }
+        
+        .input-group input:focus { 
+            border-color: #5E442E; 
+            outline: none; 
+        }
+        
+        .btn-container { 
+            display: flex; 
+            gap: 10px; 
+            margin-top: 20px; 
+        }
+        
+        .action-btn { 
+            flex: 1; 
+            padding: 13px; 
+            font-size: 15px; 
+            font-weight: bold; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            transition: 0.2s; 
+        }
+        
+        .action-btn:hover { 
+            opacity: 0.9; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="single-box" id="main-panel">
+        <div style="margin-bottom: 25px; text-align: center;">
+            <img src="cong thanh vien.png" alt="Cổng Thành Viên" 
+                 style="width: 100%; max-width: 400px; height: auto; display: block; margin: 0 auto;">
+        </div>
+        
+        <h2>CỔNG THÀNH VIÊN TRỰC TUYẾN</h2>
+
+        <div class="input-group" id="name-group">
+            <label>Tên người dùng:</label>
+            <input type="text" id="fullname" placeholder="Nhập tên hiển thị...">
+        </div>
+
+        <div class="input-group">
+            <label>Email hoặc Số điện thoại:</label>
+            <input type="text" id="account" placeholder="Nhập email hoặc sđt 10 số...">
+        </div>
+
+        <div class="input-group">
+            <label>Mật khẩu:</label>
+            <input type="password" id="password" placeholder="Nhập mật khẩu...">
+        </div>
+
+        <div class="btn-container" style="flex-direction: column; gap: 10px;">
+            <div style="display: flex; gap: 10px; width: 100%;">
+                <button class="action-btn" style="background-color: #5E442E; color: #FFF8E2; border: none;" onclick="processAuth('login')">ĐĂNG NHẬP</button>
+                <button class="action-btn" style="background-color: #FFEFB9; color: #5E442E; border: 2px solid #5E442E;" onclick="processAuth('register')">ĐĂNG KÝ MỚI</button>
+            </div>
+
+            <button class="action-btn" style="width: 100%; background-color: #BCD1DE; color: #5E442E; border: 2px solid #5E442E; display: flex; align-items: center; justify-content: center; gap: 8px;" onclick="loginWithThreads()">
+                <span>Đăng nhập qua Threads</span>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function showWelcomeScreen(userName) {
+            document.body.innerHTML = `
+                <div style="display: flex; justify-content: center; align-items: center; height: 100vh; width: 100vw; margin: 0; position: fixed; top: 0; left: 0; background-color: #FFF8E2; color: #5E442E; font-family: Arial, sans-serif; text-align: center; box-sizing: border-box; padding: 20px;">
+                    <h1 style="font-size: 78px; font-weight: 900; line-height: 1.2; margin: 0; max-width: 90vw;">Chào mừng ${userName} đã đến với fandom Embes</h1>
+                </div>
+            `;
+
+            setTimeout(function() {
+                window.location.href = "home.html";
+            }, 2500);
+        }
+
+        const savedUser = localStorage.getItem("currentUser");
+        if (savedUser) {
+            try {
+                let parsedUser = JSON.parse(savedUser);
+                document.addEventListener("DOMContentLoaded", function() {
+                    showWelcomeScreen(parsedUser.username || parsedUser.name || savedUser);
+                });
+            } catch(e) {
+                document.addEventListener("DOMContentLoaded", function() {
+                    showWelcomeScreen(savedUser);
+                });
+            }
+        }
+
+        function processAuth(type) {
+            const account = document.getElementById("account").value.trim();
+            const password = document.getElementById("password").value.trim();
+            const fullname = document.getElementById("fullname").value.trim();
+
+            if (!account || !password) {
+                alert("Vui lòng nhập đầy đủ thông tin tài khoản và mật khẩu!");
+                return;
+            }
+
+            const isEmail = account.includes("@");
+            const isPhone = /^\d{10}$/.test(account);
+
+            if (!isEmail && !isPhone) {
+                alert("Vui lòng nhập đúng định dạng Email hoặc Số điện thoại (chính xác 10 chữ số)!");
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem("site_users")) || [];
+            let usersList = JSON.parse(localStorage.getItem("users_list")) || [];
+
+            if (type === 'register') {
+                if (!fullname) {
+                    alert("Vui lòng nhập tên hiển thị để đăng ký!");
+                    return;
+                }
+
+                const existingUser = users.find(u => u.account === account);
+                if (existingUser) {
+                    alert("Tài khoản này đã tồn tại trong hệ thống!");
+                    return;
+                }
+
+                // ⏰ LẤY THỜI GIAN THỰC TẠI THỜI ĐIỂM ĐĂNG KÝ
+                const now = new Date();
+                const timeString = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} - ${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+
+                // Tạo đối tượng thành viên đầy đủ chi tiết cho Admin và Profile đọc
+                const newUserObj = {
+                    username: fullname,
+                    password: password,
+                    email: isEmail ? account : "Chưa cập nhật",
+                    phone: isPhone ? account : "Chưa cập nhật",
+                    account: account,
+                    name: fullname,
+                    created_at: timeString // Lưu ngày giờ gia nhập
+                };
+
+                users.push(newUserObj);
+                usersList.push(newUserObj);
+
+                // Lưu đồng bộ vào tất cả các kho lưu trữ
+                localStorage.setItem("site_users", JSON.stringify(users));
+                localStorage.setItem("users_list", JSON.stringify(usersList));
+
+                alert("Đăng ký thành công! Bạn có thể tiến hành đăng nhập.");
+                location.reload();
+            } else {
+                const foundUser = users.find(u => u.account === account && u.password === password);
+                if (!foundUser) {
+                    alert("Tài khoản hoặc mật khẩu không chính xác, hoặc chưa được đăng ký!");
+                    return;
+                }
+
+                // Lưu thông tin user hiện tại vào currentUser để trang profile và home dùng chung
+                localStorage.setItem("currentUser", JSON.stringify({
+                    username: foundUser.name || foundUser.account,
+                    password: foundUser.password,
+                    email: foundUser.account.includes("@") ? foundUser.account : "Chưa cập nhật",
+                    phone: foundUser.account.length === 10 ? foundUser.account : "Chưa cập nhật",
+                    created_at: foundUser.created_at || "22:15 - 12/10/2026"
+                }));
+
+                showWelcomeScreen(foundUser.name);
+            }
+        }
+
+        function loginWithThreads() {
+            let threadsUser = prompt("Nhập tên tài khoản hoặc ID Threads của bạn (Ví dụ: @chip.vintage):");
+            
+            if (threadsUser === null) {
+                return;
+            }
+            
+            if (!threadsUser.trim()) {
+                alert("Tên tài khoản Threads không được để trống!");
+                return;
+            }
+
+            let accountId = threadsUser.trim();
+            let users = JSON.parse(localStorage.getItem("site_users")) || [];
+            let usersList = JSON.parse(localStorage.getItem("users_list")) || [];
+
+            let existingUser = users.find(u => u.account === accountId);
+
+            if (!existingUser) {
+                const now = new Date();
+                const timeString = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} - ${String(now.getDate()).padStart(2, '0')}/${String(now.getMonth() + 1).padStart(2, '0')}/${now.getFullYear()}`;
+
+                existingUser = {
+                    username: accountId,
+                    password: "[Đăng nhập qua Threads]",
+                    email: "Đăng nhập qua Threads",
+                    phone: "Đăng nhập qua Threads",
+                    account: accountId,
+                    name: accountId,
+                    created_at: timeString
+                };
+                users.push(existingUser);
+                usersList.push(existingUser);
+
+                localStorage.setItem("site_users", JSON.stringify(users));
+                localStorage.setItem("users_list", JSON.stringify(usersList));
+            }
+
+            localStorage.setItem("currentUser", JSON.stringify({
+                username: existingUser.name,
+                password: existingUser.password,
+                email: existingUser.email,
+                phone: existingUser.phone,
+                created_at: existingUser.created_at
+            }));
+
+            showWelcomeScreen(existingUser.name);
+        }
+    </script>
+</body>
+</html>

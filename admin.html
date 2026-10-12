@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Quản Trị - Admin Dashboard</title>
+    <style>
+        body {
+            margin: 0;
+            background-color: #FFF8E2;
+            color: #5E442E;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 220px;
+            background-color: #5E442E;
+            color: #FFF8E2;
+            display: flex;
+            flex-direction: column;
+            padding: 20px 0;
+            flex-shrink: 0;
+        }
+
+        .sidebar h2 {
+            text-align: center;
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #FFEFB9;
+            border-bottom: 1px solid rgba(255, 239, 185, 0.2);
+            padding-bottom: 15px;
+        }
+
+        .menu-item {
+            padding: 12px 25px;
+            cursor: pointer;
+            transition: 0.2s;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: #FFEFB9;
+            color: #5E442E;
+        }
+
+        .logout-btn {
+            margin-top: auto;
+            margin-left: 20px;
+            margin-right: 20px;
+            padding: 10px;
+            background-color: #c0392b;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .logout-btn:hover { background-color: #e74c3c; }
+
+        .main-content {
+            flex: 1;
+            padding: 30px 40px;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            font-size: 22px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #5E442E;
+            padding-bottom: 8px;
+        }
+
+        .card {
+            background-color: #FFF;
+            border: 2px solid #5E442E;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+
+        .btn-submit {
+            background-color: #5E442E;
+            color: #FFF8E2;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .btn-submit:hover { opacity: 0.9; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #5E442E;
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 13px;
+        }
+
+        th { background-color: #8CAAB9; color: #5E442E; }
+
+        .btn-delete {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <h2>👑 ADMIN PANEL</h2>
+        <div class="menu-item active" onclick="showSection('section-stats', this)">📊 Cập nhật Nhạc Số</div>
+        <div class="menu-item" onclick="showSection('section-events', this)">📅 Quản lý Sự Kiện</div>
+        <div class="menu-item" onclick="showSection('section-users', this)">👥 Quản lý Thành Viên</div>
+        <button class="logout-btn" onclick="logout()">Thoát Admin</button>
+    </div>
+
+    <div class="main-content">
+
+        <!-- 1. CẬP NHẬT SỐ LIỆU STATIONHEAD -->
+        <div id="section-stats" class="content-section">
+            <div class="section-title">📊 CẬP NHẬT SỐ LIỆU STATIONHEAD</div>
+            <div class="card">
+                <div class="form-group">
+                    <label for="stationhead-input">Số lượt views / streams trên Stationhead:</label>
+                    <input type="text" id="stationhead-input" placeholder="Ví dụ: 100.000.000">
+                </div>
+                <button class="btn-submit" onclick="saveMusicStats()">💾 Cập Nhập Số Liệu Mới</button>
+            </div>
+        </div>
+
+        <!-- 2. QUẢN LÝ LỊCH SỬ SỰ KIỆN -->
+        <div id="section-events" class="content-section" style="display: none;">
+            <div class="section-title">📅 THÊM SỰ KIỆN MỚI</div>
+            <div class="card">
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label>Tháng (VD: Tháng 10):</label>
+                        <input type="text" id="ev-month" placeholder="Tháng 10">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label>Ngày (VD: 07):</label>
+                        <input type="text" id="ev-day" placeholder="07">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Tên sự kiện / Lịch trình:</label>
+                    <input type="text" id="ev-title" placeholder="VD: Negav ra mắt Album mới">
+                </div>
+                <div class="form-group">
+                    <label>Trạng thái:</label>
+                    <input type="text" id="ev-status" placeholder="VD: Sắp diễn ra / Sự kiện đã kết thúc.">
+                </div>
+                <button class="btn-submit" onclick="addEvent()">➕ Thêm Sự Kiện</button>
+            </div>
+
+            <div class="section-title">📋 DANH SÁCH SỰ KIỆN ĐÃ ĐĂNG</div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Thời gian</th>
+                            <th>Nội dung sự kiện</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-events-list"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 3. QUẢN LÝ THÀNH VIÊN (CÓ CỘT THỜI GIAN TẠO) -->
+        <div id="section-users" class="content-section" style="display: none;">
+            <div class="section-title">👥 DANH SÁCH THÀNH VIÊN ĐÃ ĐĂNG KÝ</div>
+            <div class="card">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên tài khoản (Username)</th>
+                            <th>Mật khẩu</th>
+                            <th>Email</th>
+                            <th>Số điện thoại</th>
+                            <th>⏰ Thời gian tạo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-users-list"></tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        function showSection(sectionId, element) {
+            document.querySelectorAll('.content-section').forEach(sec => sec.style.display = 'none');
+            document.querySelectorAll('.menu-item').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(sectionId).style.display = 'block';
+            element.classList.add('active');
+        }
+
+        function saveMusicStats() {
+            const val = document.getElementById("stationhead-input").value.trim();
+            if(!val) {
+                alert("Vui lòng nhập số liệu Stationhead!");
+                return;
+            }
+
+            const stats = { stationhead: val };
+            localStorage.setItem("site_music_stats", JSON.stringify(stats));
+            alert("✅ Đã cập nhật số liệu Stationhead thành công!");
+        }
+
+        function loadCurrentStats() {
+            const stats = JSON.parse(localStorage.getItem("site_music_stats")) || { stationhead: "100.000.000" };
+            document.getElementById("stationhead-input").value = stats.stationhead || "";
+        }
+
+        const defaultEvents = [
+            { month: "Tháng 10", day: "07", title: "Giải đấu nhỏ: Người ngoài...", status: "Sự kiện đã kết thúc." },
+            { month: "Tháng 10", day: "04", title: "Tranh ghép: Người ngoài...", status: "Sự kiện đã kết thúc." }
+        ];
+
+        function loadEvents() {
+            const events = JSON.parse(localStorage.getItem("site_events")) || defaultEvents;
+            const tbody = document.getElementById("admin-events-list");
+            tbody.innerHTML = "";
+
+            events.forEach((ev, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td><b>${ev.month} - Ngày ${ev.day}</b></td>
+                        <td>${ev.title}</td>
+                        <td>${ev.status}</td>
+                        <td><button class="btn-delete" onclick="deleteEvent(${index})">Xóa</button></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function addEvent() {
+            const month = document.getElementById("ev-month").value.trim();
+            const day = document.getElementById("ev-day").value.trim();
+            const title = document.getElementById("ev-title").value.trim();
+            const status = document.getElementById("ev-status").value.trim();
+
+            if(!month || !day || !title) {
+                alert("Vui lòng nhập đầy đủ tháng, ngày và tên sự kiện!");
+                return;
+            }
+
+            const events = JSON.parse(localStorage.getItem("site_events")) || defaultEvents;
+            events.unshift({ month, day, title, status: status || "Sắp diễn ra" });
+            localStorage.setItem("site_events", JSON.stringify(events));
+
+            document.getElementById("ev-month").value = "";
+            document.getElementById("ev-day").value = "";
+            document.getElementById("ev-title").value = "";
+            document.getElementById("ev-status").value = "";
+
+            loadEvents();
+            alert("✅ Đã thêm sự kiện thành công!");
+        }
+
+        function deleteEvent(index) {
+            if(confirm("Bạn có chắc muốn xóa sự kiện này không?")) {
+                const events = JSON.parse(localStorage.getItem("site_events")) || defaultEvents;
+                events.splice(index, 1);
+                localStorage.setItem("site_events", JSON.stringify(events));
+                loadEvents();
+            }
+        }
+
+        // TẢI THÔNG TIN VÀ CỘT THỜI GIAN
+        function loadUsers() {
+            let users = [];
+
+            for (let i = 0; i < localStorage.length; i++) {
+                let keyName = localStorage.key(i);
+                if (keyName === 'site_music_stats' || keyName === 'site_events') continue;
+
+                try {
+                    let rawData = localStorage.getItem(keyName);
+                    let parsed = JSON.parse(rawData);
+
+                    if (Array.isArray(parsed)) {
+                        parsed.forEach(item => {
+                            if (item && typeof item === 'object') {
+                                let u = item.username || item.name || item.taiKhoan || item.email;
+                                let p = item.password || item.pass || item.matKhau || '******';
+                                let e = item.email || item.thuDienTu || 'Chưa cập nhật';
+                                let ph = item.phone || item.dienThoai || item.sdt || item.soDienThoai || 'Chưa cập nhật';
+                                let time = item.created_at || item.createdAt || item.time || '22:15 - 12/10/2026';
+                                if (u) users.push({ username: u, password: p, email: e, phone: ph, created_at: time });
+                            }
+                        });
+                    } else if (parsed && typeof parsed === 'object') {
+                        let u = parsed.username || parsed.name || parsed.taiKhoan || parsed.email;
+                        let p = parsed.password || parsed.pass || parsed.matKhau || '******';
+                        let e = parsed.email || parsed.thuDienTu || 'Chưa cập nhật';
+                        let ph = parsed.phone || parsed.dienThoai || parsed.sdt || parsed.soDienThoai || 'Chưa cập nhật';
+                        let time = parsed.created_at || parsed.createdAt || parsed.time || '22:15 - 12/10/2026';
+                        if (u) users.push({ username: u, password: p, email: e, phone: ph, created_at: time });
+                    }
+                } catch (e) {}
+            }
+
+            let uniqueUsers = [];
+            let seenNames = new Set();
+            users.forEach(u => {
+                if (u.username && !seenNames.has(u.username)) {
+                    seenNames.add(u.username);
+                    uniqueUsers.push(u);
+                }
+            });
+
+            const tbody = document.getElementById("admin-users-list");
+            tbody.innerHTML = "";
+
+            if (uniqueUsers.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: #c0392b; font-weight: bold; padding: 15px;">Chưa có tài khoản nào trong bộ nhớ!</td></tr>`;
+                return;
+            }
+
+            uniqueUsers.forEach((u, index) => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td><b>${u.username}</b></td>
+                        <td>${u.password}</td>
+                        <td>${u.email}</td>
+                        <td>${u.phone}</td>
+                        <td><small style="color: #5E442E; font-weight: bold;">${u.created_at}</small></td>
+                    </tr>
+                `;
+            });
+        }
+
+        function logout() {
+            window.location.href = "home.html";
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            loadCurrentStats();
+            loadEvents();
+            loadUsers();
+        });
+    </script>
+</body>
+</html>

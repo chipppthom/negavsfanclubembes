@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Chủ - Fandom Negav</title>
+    <style>
+        body { 
+            margin: 0; 
+            background-color: #FFF8E2; 
+            color: #5E442E; 
+            font-family: Arial, sans-serif; 
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        /* Thanh Sidebar thu nhỏ bên trái */
+        .sidebar {
+            width: 55px;
+            background-color: #5E442E;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 0;
+            flex-shrink: 0;
+        }
+
+        .sidebar-top, .sidebar-bottom {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar-btn {
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            background-color: #FFF8E2;
+            border: 2px solid #FFF8E2;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        .avatar-btn:hover { transform: scale(1.05); }
+
+        .avatar-btn img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .icon-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background-color: #FFF8E2;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #5E442E;
+            transition: 0.2s;
+        }
+
+        .icon-btn:hover { opacity: 0.8; transform: scale(1.05); }
+
+        /* Khu vực nội dung chính */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Khung màu nâu lớn kéo dài phủ ngang */
+        .big-banner {
+            background-color: #5E442E;
+            color: #FFF8E2;
+            border-radius: 15px;
+            padding: 35px 30px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .stationhead-number {
+            font-size: 52px;
+            font-weight: 900;
+            color: #FFEFB9;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .stationhead-label {
+            font-size: 16px;
+            font-weight: bold;
+            color: #FFF8E2;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Hàng chứa 2 ô widget song song */
+        .widgets-row {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .widget-box {
+            flex: 1;
+            background-color: #FFEFB9;
+            border-radius: 10px;
+            padding: 10px;
+            color: #5E442E;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 65px;
+        }
+
+        .widget-title {
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        /* Bảng Lịch sự kiện thu nhỏ và đẩy sang bên phải đúng hình thứ 2 */
+        .event-box {
+            width: 320px;
+            align-self: flex-end; /* Đẩy sang góc bên phải */
+            background: #BCD1DE;
+            border: 2px solid #5E442E;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+        }
+
+        .event-header {
+            background-color: #8CAAB9;
+            padding: 12px 15px;
+            font-weight: bold;
+            color: #5E442E;
+            border-bottom: 2px solid #5E442E;
+        }
+
+        .event-item {
+            display: flex;
+            background-color: #FFF;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .event-date {
+            background-color: #5E442E;
+            color: #FFF8E2;
+            padding: 10px;
+            text-align: center;
+            width: 70px;
+            font-size: 13px;
+            font-weight: bold;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .event-desc {
+            padding: 10px 15px;
+            font-size: 14px;
+            color: #5E442E;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-top">
+            <!-- Sửa đoạn này trong file home.html của Chíp -->
+<button class="avatar-btn" title="Hồ sơ cá nhân" onclick="window.location.href='profile.html'">
+    <img src="https://via.placeholder.com/150" alt="Avatar">
+</button>
+        </div>
+        <div class="sidebar-bottom">
+            <button class="icon-btn" title="Cài đặt / Đăng xuất" onclick="logout()">⚙️</button>
+        </div>
+    </div>
+
+    <!-- Nội dung chính -->
+    <div class="main-content">
+        <!-- Bảng màu nâu lớn kéo dài hết cỡ -->
+        <div class="big-banner">
+            <div class="stationhead-number" id="stationhead-val">100.000.000</div>
+            <div class="stationhead-label">views tren STATIONHEAD</div>
+
+            <div class="widgets-row">
+                <!-- Widget YouTube -->
+                <div class="widget-box">
+                    <div class="widget-title">WIDGET YOUTUBE</div>
+                    <iframe width="100%" height="38" src="https://www.youtube.com/embed/videoseries?list=PLx0sYbCqPo8DJvtjXsbPZr3lDkZt3I1Q8" title="YouTube Negav" frameborder="0" allowfullscreen style="border-radius: 4px;"></iframe>
+                </div>
+
+                <!-- Widget Spotify -->
+                <div class="widget-box">
+                    <div class="widget-title">WIDGET SPOTIFY</div>
+                    <iframe style="border-radius:4px" src="https://open.spotify.com/embed/artist/4fg8aMZ23d2bxKz7r2vt9v?utm_source=generator&theme=0" width="100%" height="38" frameBorder="0" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bảng Lịch sự kiện thu nhỏ nằm bên phải bên dưới khung màu nâu -->
+        <div class="event-box" id="event-box">
+            <div class="event-header">📅 Lịch sử sự kiện</div>
+        </div>
+    </div>
+
+    <script>
+        function displayMusicStats() {
+            const stats = JSON.parse(localStorage.getItem("site_music_stats")) || {
+                stationhead: "100.000.000"
+            };
+            document.getElementById("stationhead-val").innerText = stats.stationhead || "100.000.000";
+        }
+
+        const defaultEvents = [
+            { month: "Tháng 10", day: "07", title: "Giải đấu nhỏ: Người ngoài...", status: "Sự kiện đã kết thúc." },
+            { month: "Tháng 10", day: "04", title: "Tranh ghép: Người ngoài...", status: "Sự kiện đã kết thúc." }
+        ];
+
+        function displayEvents() {
+            const events = JSON.parse(localStorage.getItem("site_events")) || defaultEvents;
+            const eventBox = document.getElementById("event-box");
+
+            let htmlContent = `<div class="event-header">📅 Lịch sử sự kiện</div>`;
+            events.forEach(ev => {
+                htmlContent += `
+                    <div class="event-item">
+                        <div class="event-date">${ev.month}<br>${ev.day}</div>
+                        <div class="event-desc"><b>${ev.title}</b><br>${ev.status}</div>
+                    </div>
+                `;
+            });
+            eventBox.innerHTML = htmlContent;
+        }
+
+        function logout() {
+            if(confirm("Bạn có muốn đăng xuất tài khoản không?")) {
+                localStorage.removeItem("currentUser");
+                window.location.href = "user.html";
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            displayMusicStats();
+            displayEvents();
+        });
+    </script>
+</body>
+</html>
